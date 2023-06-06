@@ -1,7 +1,7 @@
 Package containing FHIR related processors and utilities for implementing FHIR APIs, FHIR
 related integrations, etc
 
-# FHIR R4 Utils PatientMatching package
+# FHIR R4 Utils package
 
 ## Package Overview
 
