@@ -48,7 +48,7 @@ public type MPIDbConfig record {
 // };
 
 # Implementation of the RuleBasedPatientMatching Algorithm
-public isolated class RuleBasedPatientMatching {
+public isolated class RuleBasedPatientMatcher {
     *PatientMatcher;
 
     public isolated function verifyPatient(r4:Patient sourcePatient, r4:Patient targetPatient, json config) returns error|http:Response {

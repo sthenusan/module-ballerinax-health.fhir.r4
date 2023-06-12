@@ -13,8 +13,6 @@ import ballerinax/health.fhir.r4;
 import ballerina/http;
 import ballerina/sql;
 
-public final PMRegistry patientMatcherRegistry = new PMRegistry();
-
 
 # Abstract Patient Matcher
 public type PatientMatcher object {
@@ -40,10 +38,8 @@ public type PatientMatcher object {
     public isolated function getMpiDbClient(json config) returns sql:Client|error;
 };
 
-// public type verifyPatientFunct isolated function (r4:Patient sourcePatient, r4:Patient targetPatient, json config) returns error|http:Response;
-// public type matchPatientsFunct isolated function (r4:Patient sourcePatient, json config) returns error|http:Response;
+public isolated function getPatientMatcher() returns PatientMatcher {
 
-// public type PatientMatcherType record {|
-//     readonly verifyPatientFunct verifyPatient;
-//     readonly matchPatientsFunct matchPatients;
-// |};
+    return new RuleBasedPatientMatcher();
+
+}
