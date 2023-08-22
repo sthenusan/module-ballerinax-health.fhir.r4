@@ -106,7 +106,7 @@ public isolated class FHIRContext {
     # Set FHIR response sent to client application.
     #
     # + response - FHIR response message
-    isolated function setFHIRResponse(FHIRResponse|FHIRContainerResponse response) {
+    public isolated function setFHIRResponse(FHIRResponse|FHIRContainerResponse response) {
         lock {
             self.fhirResponse = response;
         }

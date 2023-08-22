@@ -57,6 +57,15 @@ public isolated service class FHIRResponseInterceptor {
             // set the proper response code
             res.statusCode = fhirContext.getErrorCode();
         }
+        r4:FHIRResponse|r4:FHIRContainerResponse? fhirResponse = fhirContext.getFHIRResponse();
+        if fhirResponse is r4:FHIRResponse {
+            r4:FHIRResourceEntity resourceEntity = fhirResponse.getResourceEntity();
+            map<anydata> cleanedResourceEntity = self.recordCleanUp(<map<anydata>>resourceEntity.unwrap());
+            r4:FHIRResourceEntity FhirResourceEntity = new (cleanedResourceEntity);
+            r4:FHIRResponse newFhirResponse = new(FhirResourceEntity);
+            fhirContext.setFHIRResponse(newFhirResponse);
+            res.setJsonPayload(cleanedResourceEntity.toJson());
+        }
         return getNextService(ctx);
     }
 
@@ -86,6 +95,67 @@ public isolated service class FHIRResponseInterceptor {
             }
         }
     }
+
+    # RecordCleanUp function to remove empty fields in the resource records.
+    #
+    # + mapResource - recource record that need to be cleaned
+    # + return - cleaned resource record
+    public isolated function recordCleanUp(map<anydata> mapResource) returns map<anydata> {
+        foreach string key in mapResource.keys() {
+            anydata keyValue = mapResource.get(key);
+
+            if (keyValue is string || keyValue is int || keyValue is boolean || keyValue is decimal || keyValue is float) {
+                if keyValue.toString() is "" || keyValue.toString() is "null" {
+                    _ = mapResource.remove(key);
+                }
+                continue;
+            }
+            if keyValue is map<anydata> {
+                map<anydata> subResult = self.recordCleanUp(keyValue);
+                if subResult.toString() is "{}" {
+                    _ = mapResource.remove(key);
+                } else {
+                    mapResource[key] = subResult;
+                }
+                continue;
+            }
+            if keyValue is map<anydata>[] {
+                foreach map<anydata> subValue in keyValue {
+                    map<anydata> subResult = self.recordCleanUp(subValue);
+                    int? subIndex = keyValue.indexOf(subValue);
+                    if subIndex is int {
+                        if !(subResult.toString() is "{}" || subResult.toString() is "[]") {
+                            keyValue[subIndex] = subResult;
+                        } else {
+                            _ = keyValue.remove(subIndex);
+                        }
+                    }
+                }
+                if !(keyValue.toJson().toString() is "{}" || keyValue.toJson().toString() is "[]") {
+                    mapResource[key] = keyValue;
+                } else {
+                    _ = mapResource.remove(key);
+                }
+                continue;
+            }
+
+            if keyValue is string[] {
+                foreach string subValue in keyValue {
+                    int index = <int>keyValue.indexOf(subValue);
+                    if keyValue[index].toString() is "" || keyValue[index].toString() is "null" {
+                        _ = keyValue.remove(index);
+                    }
+                }
+                if !(keyValue.toString() is "{}" || keyValue.toString() is "[]") {
+                    mapResource[key] = keyValue;
+                } else {
+                    _ = mapResource.remove(key);
+                }
+            }
+        }
+        return mapResource;
+    }
+
 }
 
 # Response error interceptor to handle errors thrown by fhir preproccessors

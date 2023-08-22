@@ -420,7 +420,7 @@ public type FHIRUpdateInteraction record {
 public isolated class FHIRResponse {
     private final FHIRResourceEntity resourceEntity;
 
-    isolated function init(FHIRResourceEntity resourceEntity) {
+    public isolated function init(FHIRResourceEntity resourceEntity) {
         self.resourceEntity = resourceEntity;
     }
 
@@ -433,7 +433,7 @@ public isolated class FHIRResponse {
 public isolated class FHIRContainerResponse {
     private final FHIRContainerResourceEntity resourceEntity;
 
-    isolated function init(FHIRContainerResourceEntity resourceEntity) {
+    public isolated function init(FHIRContainerResourceEntity resourceEntity) {
         self.resourceEntity = resourceEntity;
     }
 

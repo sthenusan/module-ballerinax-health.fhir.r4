@@ -1,8 +1,8 @@
 [package]
 org = "ballerinax"
 name = "health.fhirr4"
-version = "${project.version}"
-distribution = "${ballerina.version}"
+version = "1.0.8"
+distribution = "2201.7.0"
 authors = ["Ballerina"]
 keywords = ["Healthcare", "FHIR", "R4", "service"]
 repository = "https://github.com/ballerina-platform/module-ballerinax-health.fhir.r4"
@@ -13,17 +13,20 @@ observabilityIncluded = true
 [[dependency]]
 org = "ballerinax"
 name = "health.fhir.r4"
-version = "${r4.version}"
+version = "4.0.1"
+repository="local"
 
 [[dependency]]
 org = "ballerinax"
 name = "health.fhir.r4.parser"
-version = "${parser.version}"
+version = "4.0.1"
+repository="local"
 
 [[dependency]]
 org = "ballerinax"
 name = "health.fhir.r4.international401"
-version = "${international.version}"
+version = "1.0.1"
+repository="local"
 
 [[platform.java11.dependency]]
 groupId = "io.ballerinax"
