@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/http;
+import ballerinax/health.fhir.r4;
 
 # Abstract Patient Matcher.
 public type PatientMatcher isolated object {
@@ -23,5 +23,24 @@ public type PatientMatcher isolated object {
     # + patientMatchRequestData - Record to hold patient matching request data  
     # + config - Configuration Record for Patient Matching Algorithm
     # + return - Return Matched Patients
-    public isolated function matchPatients(PatientMatchRequestData patientMatchRequestData, ConfigurationRecord? config = ()) returns error|http:Response;
+    public isolated function matchPatients(PatientMatchRequestData patientMatchRequestData, ConfigurationRecord config) returns error|r4:Bundle;
+};
+
+# Record to hold configrations of a PatientMatching Algorithm.
+public type ConfigurationRecord record {
+    # Base URL for the Source System.
+    string baseURL;
+    # Data Retriever type to be used in the patient matching algorithm
+    DataRetriever dataRetriever;
+
+};
+
+# Record to hold the patient match request.
+public type PatientMatchRequestData record {
+    # resource type name
+    string resourceType;
+    # resource Id
+    string id;
+    # parameter resource in fhir specification
+    json[] 'parameter;
 };
